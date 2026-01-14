@@ -1,0 +1,96 @@
+.arena {
+  margin: 0;
+}
+
+.arena .row {
+    display: flex;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.arena .row .cell {
+  /*display: */
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 60px;
+  height: 60px;
+  padding: 15px;
+}
+
+.arena .cell .player{
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.arena .cell .player:after{
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+
+.arena .cell .player.left:after {
+  left: -10px;
+  top: 15px;
+}
+
+.arena .cell .player.right:after {
+  right: -10px;
+  top: 15px;
+}
+
+.arena .cell .player.up:after {
+  right: 15px;
+  top: -15px;
+}
+
+.arena .cell .player.down:after {
+  right: 15px;
+  bottom: -15px;
+}
+
+.arena .cell .player.playerA{
+  background-color: red;
+
+}
+
+.arena .cell .player.playerA:after {
+  background-color: red;
+}
+
+.arena .cell .player.playerB{
+  background-color: blue;
+
+}
+
+.arena .cell .player.playerB:after {
+  background-color: blue;
+}
+
+.arena .diamond{
+  background: gold;
+  width: 50px;
+  height: 50px;
+  transform: rotate(45deg);
+}
+
+.arena .bullet{
+  background: brown;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  /*transform: rotate(45deg);*/
+}
+
+.arena .player.shooting:after{
+  background-color: orange !important;
+}
+
+.arena .player.destroyed{
+  background-color: black !important;
+}
+
+.arena .player.destroyed:after{
+  background-color: black !important;
+}
