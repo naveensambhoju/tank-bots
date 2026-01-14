@@ -1,5 +1,4 @@
-
-export default function main(mapData, you, opp){
+function main(mapData, you, opp){
     /*
 
         mapData = [
@@ -57,3 +56,5 @@ export default function main(mapData, you, opp){
     return "none";
 
 }
+
+module.exports = main;

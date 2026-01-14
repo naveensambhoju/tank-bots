@@ -1,8 +1,22 @@
-import botA from "./BotA";
-import botB from "./BotB";
+const seedrandom = require("seedrandom");
 
-export default  class Game {
-    onRoundUpdate: (number: number) => void;
+class Game {
+    botA = undefined;
+    botB = undefined;
+
+    seed = undefined;
+
+    constructor(a, b, seed = null) {
+        this.botA = a;
+        this.botB = b;
+
+        this.seed =
+            seed ?? `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
+        seedrandom(this.seed, { global: true });
+
+
+    }
+    onRoundUpdate = undefined;
 
     message= "";
 
@@ -35,11 +49,11 @@ export default  class Game {
         visible: false
     }
 
-    ROUND_SIZE= 500
+    ROUND_SIZE= 120
 
-    ROUND_TIMER = 250
+    ROUND_TIMER = 0
 
-    ROUND_INTERVAL?: number = undefined;
+    ROUND_INTERVAL = undefined;
 
     CURRENT_ROUND = 0;
 
@@ -50,11 +64,19 @@ export default  class Game {
     init(theOnRoundUpdate){
         // console.log("ININT");
         this.CURRENT_ROUND = 0;
-        this.ROUND_INTERVAL = setInterval( ()=> {
-            // console.log("ROUND_INTERVAL");
+        const gameData = [this.getMap()];
+        for(let i  = 0;i < this.ROUND_SIZE;i++){
             this.round();
-            }, this.ROUND_TIMER);
-        this.onRoundUpdate = theOnRoundUpdate;
+            const roundData = this.getMap();
+            gameData.push(roundData);
+            // console.log("Add", (roundData.playerA.position));
+        }
+        //
+        // for(const round of gameData){
+        //     console.log(round.playerA.position);
+        // }
+
+        return gameData;
 
     }
 
@@ -115,12 +137,23 @@ export default  class Game {
         }
     }
 
+    getMap(){
+        // console.log("map",this.playerA.position[0]);
+
+        return {
+            playerA: {...this.playerA},
+            playerB: {...this.playerB},
+            diamond: {...this.diamond},
+            bullet: {...this.bullet},
+        };
+    }
+
 
     round(){
         // console.log("round");
         this.CURRENT_ROUND++;
 
-        const aAction = botA([
+        const aAction = this.botA([
             {
                 type: "you",
                 ...this.playerA
@@ -133,7 +166,7 @@ export default  class Game {
             this.bullet
         ]);
 
-        const bAction = botB([
+        const bAction = this.botB([
             {
                 type: "you",
                 ...this.playerB
@@ -157,10 +190,12 @@ export default  class Game {
         this.manageObjects();
 
         if (this.CURRENT_ROUND >= this.ROUND_SIZE) {
-            clearInterval(this.ROUND_INTERVAL);
+            // clearInterval(this.ROUND_INTERVAL);
+            this.gameOver();
         }
 
-        this.onRoundUpdate(this.CURRENT_ROUND);
+        if (this.onRoundUpdate)
+            this.onRoundUpdate(this.CURRENT_ROUND);
         // console.log("this.round", this.CURRENT_ROUND)
 
     }
@@ -185,7 +220,6 @@ export default  class Game {
         if (areObjectsColliding(this.playerB, this.playerA)){
             this.gameOver(null);
         }
-
     }
 
     canPlayerShootOther(shooter, victim){
@@ -197,8 +231,11 @@ export default  class Game {
     }
 
     gameOver(winner){
+        this.endGame();
+
         if (winner != null){
             this.message = "Game Over! winner:"+  winner;
+
         }
         else if (this.playerA.diamonds > this.playerB.diamonds){
             this.message = ("Game Over! winner:"+  "A");
@@ -210,11 +247,12 @@ export default  class Game {
             this.message = ("Game Over! No Winner");
         }
 
-        this.endGame();
+        console.log(this.message);
+        console.log("seed:", this.seed);
     }
 
     endGame(){
-        clearInterval(this.ROUND_INTERVAL);
+        // clearInterval(this.ROUND_INTERVAL);
     }
 
     manageObjects() {
@@ -263,12 +301,12 @@ function areObjectsColliding(object1, object2){
     return object1.position[0] == object2.position[0] && object1.position[1] == object2.position[1];
 }
 
-export function isObjectPosition(object, x, y ){
-    return object.position[0] == x && object.position[1] == y;
-}
-
-
 function getRandomNumber(limit) {
     return Math.floor(Math.random() * limit);
 }
 
+function isObjectPosition(object, x, y ){
+    return object.position[0] == x && object.position[1] == y;
+}
+
+module.exports = Game;

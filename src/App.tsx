@@ -1,29 +1,77 @@
-import {useEffect, useRef, useState} from 'react'
-import Game, { isObjectPosition} from './Game';
+import {useCallback, useEffect, useRef, useState} from 'react'
+import { isObjectPosition} from './util.js';
+import gameData from "./match.json";
 import './App.css'
 
-const game = new Game();
+const STAGE_SIZE = 8;
+
+type ObjectData = {
+    position: [number, number];
+    direction?: number;
+    type?: string;
+    diamonds?: number;
+    bullets?: number;
+    shooting?: boolean;
+    destroyed?: boolean;
+    visible?: boolean;
+}
+
+type RoundDataType = {
+    playerA: ObjectData,
+    playerB: ObjectData,
+    diamond: ObjectData,
+    bullet: ObjectData,
+}
 
 function App() {
-    const [update, setUpdate] = useState(0);
+    const [round, setRound] = useState(0);
+    const [roundData, setRoundData] = useState<RoundDataType>();
+
+    const timer = useRef<number>(0);
+
+    useCallback(function playRound(){
+        if (round >= gameData.length){
+            clearInterval(timer.current);
+            return;
+        }
+        const data  = gameData[round];
+
+        setRoundData({
+            playerA: data.playerA,
+            playerB: data.playerB,
+            diamond: data.diamond,
+            bullet: data.bullet,
+        });
+
+    }, [round]);
 
     useEffect(() => {
-        // console.log("dssds");
-        game.init(setUpdate);
+        console.log("gameData", gameData.length);
+        // game.init(setUpdate);
+
+        timer.current = setInterval(function(){
+            playRound();
+            setRound((round) => round+1);
+            console.log("round", round);
+
+        }, 1000)
 
         return () => {
-            game.endGame();
+            clearInterval(timer.current);
         }
-    }, []);
+    }, [playRound, round]);
+
+
 
     const renderObjects = (x,y) => {
 
-        if (isObjectPosition(game.playerA, x, y)) {
+        if (!roundData) return;
+
+        if (isObjectPosition(roundData.playerA, x, y)) {
             const classes = ["player", "playerA",
-                game.playerA.direction,
-                game.playerA.shooting ? "shooting" : "",
-                game.playerA.destroyed ? "destroyed" : "",
-
+                roundData.playerA.direction,
+                roundData.playerA.shooting ? "shooting" : "",
+                roundData.playerA.destroyed ? "destroyed" : "",
             ];
 
             return (
@@ -31,11 +79,11 @@ function App() {
             )
         }
 
-        if (isObjectPosition(game.playerB, x, y)) {
+        if (isObjectPosition(roundData.playerB, x, y)) {
             const classes = ["player", "playerB",
-                game.playerB.direction,
-                game.playerB.shooting ? "shooting" : "",
-                game.playerB.destroyed ? "destroyed" : ""
+                roundData.playerB.direction,
+                roundData.playerB.shooting ? "shooting" : "",
+                roundData.playerB.destroyed ? "destroyed" : ""
             ];
 
             return (
@@ -43,7 +91,7 @@ function App() {
             )
         }
 
-        if (isObjectPosition(game.diamond, x, y) && game.diamond.visible) {
+        if (isObjectPosition(roundData.diamond, x, y) && roundData.diamond.visible) {
             const classes = ["diamond"];
 
             return (
@@ -51,7 +99,7 @@ function App() {
             )
         }
 
-        if (isObjectPosition(game.bullet, x, y) && game.bullet.visible) {
+        if (isObjectPosition(roundData.bullet, x, y) && roundData.bullet.visible) {
             const classes = ["bullet"];
 
             return (
@@ -61,12 +109,13 @@ function App() {
 
     }
 
+
   return (
       <div>
             <div className="arena">
-                {[...Array(game.STAGE_SIZE).keys()].map((y => (
+                {[...Array(STAGE_SIZE).keys()].map((y => (
                     <div className={"row"}>
-                        {[...Array(game.STAGE_SIZE).keys()].map((x => (
+                        {[...Array(STAGE_SIZE).keys()].map((x => (
                             <div className={"cell"}>
                                 {/*<div className={"info"}> {x},{y}</div>*/}
                                 {renderObjects(x,y)}
@@ -76,8 +125,8 @@ function App() {
                 )))}
 
             </div>
-          <div className="round-number">{update}</div>
-          <div className="game-message" >{game.message}</div>
+          <div className="round-number">{round}</div>
+          {/*<div className="game-message" >{game.message}</div>*/}
       </div>
   )
 }

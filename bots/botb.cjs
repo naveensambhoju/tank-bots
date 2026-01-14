@@ -1,5 +1,4 @@
-
-export default function main(mapData, you, opp){
+function main(mapData, you, opp){
     /*
 
         mapData = [
@@ -32,7 +31,7 @@ export default function main(mapData, you, opp){
         ]
      */
 
-    var a =  Math.random() < 1 / 3 ? "moving" : Math.random() < 0.5 ? "rotating" : "shooting";
+    var a =  Math.random() < 1 / 2 ? "moving" : Math.random() < 0.75? "rotating" : "shooting";
 
     switch (a){
         case "moving": {
@@ -44,7 +43,7 @@ export default function main(mapData, you, opp){
             return options[Math.floor(Math.random() * options.length)];
         }
         default: {
-            const options = ["shoot", "none", "none", "none"];
+            const options = ["shoot", "none"];
             return options[Math.floor(Math.random() * options.length)];
         }
     }
@@ -57,3 +56,5 @@ export default function main(mapData, you, opp){
     return "none";
 
 }
+
+module.exports = main;
