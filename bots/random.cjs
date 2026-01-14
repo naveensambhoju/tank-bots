@@ -1,8 +1,8 @@
-function main(mapData, you, opp){
+function main(mapData){
     /*
-
+        Sample mapdata:
         mapData = [
-{
+            {
                 type: "you",
                 position: [4,1],
                 direction: "s",
@@ -49,9 +49,10 @@ function main(mapData, you, opp){
     }
 
 
-
-
-    /// up, left right down shoot, none, rotate-up, rotate-left, rotate-right, rotate-down
+    // return options:
+    // up, left, right, down
+    // rotate-up, rotate-left, rotate-right, rotate-down
+    // shoot, none,
 
     return "none";
 

@@ -25,7 +25,7 @@ const gameData = game.init();
 
 
 fs.writeFileSync(
-    'match.json',
+    'src/match.json',
     JSON.stringify(gameData, null, 2),
     'utf-8'
 );
