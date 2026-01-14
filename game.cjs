@@ -14,11 +14,11 @@ class Game {
             seed ?? `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
         seedrandom(this.seed, { global: true });
 
-
     }
     onRoundUpdate = undefined;
 
     message= "";
+    winner = undefined;
 
     playerA = {
         position: [0,0],
@@ -59,6 +59,8 @@ class Game {
 
     STAGE_SIZE = 8;
 
+    gameEnded = false;
+
     STAGE_END_POSITION =  this.STAGE_SIZE - 1;
 
     init(theOnRoundUpdate){
@@ -69,6 +71,8 @@ class Game {
             this.round();
             const roundData = this.getMap();
             gameData.push(roundData);
+            if (this.gameEnded) break;
+
             // console.log("Add", (roundData.playerA.position));
         }
         //
@@ -76,7 +80,7 @@ class Game {
         //     console.log(round.playerA.position);
         // }
 
-        return gameData;
+        return {gameData,winner: this.winner};
 
     }
 
@@ -235,16 +239,22 @@ class Game {
 
         if (winner != null){
             this.message = "Game Over! winner:"+  winner;
+            this.winner = winner;
 
         }
         else if (this.playerA.diamonds > this.playerB.diamonds){
             this.message = ("Game Over! winner:"+  "A");
+            this.winner = "A";
+
         }
         else if (this.playerA.diamonds < this.playerB.diamonds){
             this.message = ("Game Over! winner:"+  "B");
+            this.winner = "B";
+
         }
         else {
             this.message = ("Game Over! No Winner");
+            this.winner = "N/A"
         }
 
         console.log(this.message);
@@ -252,7 +262,7 @@ class Game {
     }
 
     endGame(){
-        // clearInterval(this.ROUND_INTERVAL);
+        this.gameEnded = true;
     }
 
     manageObjects() {

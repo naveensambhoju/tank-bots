@@ -24,3 +24,10 @@ This is a developer bot competition game, where 2 developers bot fight.
 - `seed` is optional here. Example command: `node fight.cjs bots/botA.cjs bots/botB.cjs`.
 - For start you can try `node fight.cjs bots/random.cjs bots/random.cjs` where the random bot fights with itself.
 - Once you run the game, you can play the game in browser using `npm run dev`.
+
+## Improve your bot
+To improve your bot, you need to play multiple times with all other bots, for that we 
+created this command below, which will fight that opposition 50 times. You can modify that to more
+if you like in the `fight50.cjs`.
+
+`node fight50.cjs <bot1_path> <bot2_path>`
