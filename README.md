@@ -24,6 +24,7 @@ This is a developer bot competition game, where 2 developers bot fight.
 - `seed` is optional here. Example command: `node fight.cjs bots/botA.cjs bots/botB.cjs`.
 - For start you can try `node fight.cjs bots/random.cjs bots/random.cjs` where the random bot fights with itself.
 - Once you run the game, you can play the game in browser using `npm run dev`.
+- Also dont commit your bot changes directly to the repository.
 
 ## Improve your bot
 To improve your bot, you need to play multiple times with all other bots, for that we 
@@ -31,3 +32,12 @@ created this command below, which will fight that opposition 50 times. You can m
 if you like in the `fight50.cjs`.
 
 `node fight50.cjs <bot1_path> <bot2_path>`
+
+## Hide your Bot code
+If everyone reveals thier Bot code logic, there will be no competition. So we suggest everyone to obfuscate your 
+bot code using the below function. 
+
+`npx javascript-obfuscator bots/mybot.cjs --output bots/<yourname>.cjs `
+
+Best practice is to write your code in `bots/mybot.cjs` file(you need to create it), which is already added in .gitignore so it will
+not be pushed to repo. So you can just execute above with your name, and your obfuscated bot should be ready.
