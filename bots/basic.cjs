@@ -1,9 +1,6 @@
 /**
- * A simple but effective bot.
- * Beats random bots consistently by using:
- * - Position awareness
- * - Direction control
- * - Deterministic movement
+ * A simple bot.
+ * - Moves towards the Diamond always
  */
 
 function main(mapData) {

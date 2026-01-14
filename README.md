@@ -40,7 +40,7 @@ if you like in the `fight50.cjs`.
 
 ![img.png](public/fight50-command.png)
 
-## Hide your Bot code
+### Hide your Bot code
 If everyone reveals thier Bot code logic, there will be no competition. So we suggest everyone to obfuscate your 
 bot code using the below function. 
 
@@ -50,3 +50,10 @@ Best practice is to write your code in `bots/mybot.cjs` file(you need to create 
 not be pushed to repo. And we included the above command in `package.json` inside 
 ```npm run bot-compile```
 So you can just execute above after modifying your output name in `package.json` and your obfuscated bot should be ready.
+
+### The leading bot
+```node fightall.cjs```
+
+Command finds all bots in `/bots` folder and fights every bot with other bot 200 times and gives you the wins.
+Thus showcasing the leading bot currently.
+
